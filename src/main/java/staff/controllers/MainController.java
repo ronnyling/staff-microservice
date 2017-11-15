@@ -39,6 +39,9 @@ public class MainController implements Interface {
 
 	RestTemplate restTemplate = new RestTemplate();
 
+	@Autowired
+	private Interface anInterface;
+
 
 	public String returnGreeting() {
 		return "Hello from Eureka Client!";
