@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Controller    // This means that this class is a Controller
-@RequestMapping(path="/msa") // This means URL's start with /demo (after Application path)
+@RequestMapping(path="/staff") // This means URL's start with /demo (after Application path)
 @Slf4j
 @EnableEurekaClient
 public class MainController implements Interface {

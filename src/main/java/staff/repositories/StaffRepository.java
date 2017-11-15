@@ -21,7 +21,7 @@ public class StaffRepository {
      */
 
     public String  checkExist(String eID) {
-        final String sql ="SELECT * FROM db_example.staff where eid=?";
+        final String sql ="SELECT * FROM staff.staff where eid=?";
         try {
             jdbcTemplate.queryForObject(sql,new StaffMapper(),eID);
             return ("Exist");
@@ -30,7 +30,7 @@ public class StaffRepository {
         }
     }
     public Staff getStaffInfo_byStaffName(String staffName) {
-        final String sql ="SELECT * FROM db_example.staff where f_name=?";
+        final String sql ="SELECT * FROM staff.staff where f_name=?";
         try {
             return jdbcTemplate.queryForObject(sql,new StaffMapper(),staffName);
         } catch (Exception ex) {
@@ -40,7 +40,7 @@ public class StaffRepository {
     }
 
     public List<Staff>  getStaffInfo_byBranchIDall(String branchID) {
-        final String sql ="SELECT * FROM db_example.staff where location=?";
+        final String sql ="SELECT * FROM staff.staff where location=?";
         try {
             List<Staff> allStaff=jdbcTemplate.query(
                     sql,
@@ -55,7 +55,7 @@ public class StaffRepository {
     }
 
     public Staff  getStaffInfo_byBranchID(String branchID) {
-        final String sql ="SELECT * FROM db_example.staff where location=?";
+        final String sql ="SELECT * FROM staff.staff where location=?";
         try {
 
             return jdbcTemplate.queryForObject(sql,new StaffMapper(),branchID);
@@ -65,19 +65,19 @@ public class StaffRepository {
         }
     }
     public void registerStaff(Staff staff){
-        final String insertSQL="INSERT INTO db_example.staff(eid, f_name, l_name, " +
+        final String insertSQL="INSERT INTO staff.staff(eid, f_name, l_name, " +
                 "gender, age, email, job_title, career_lvl, location) " +
                 "VALUES(?,?,?,?,?,?,?,?,?)";
         jdbcTemplate.update(insertSQL,staff.getEID(),staff.getFName(),staff.getLName(),staff.getGender(),staff.getAge()
                 ,staff.getEmail(),staff.getJobTitle(),staff.getCareerLvl(),staff.getLocation());
     }
     public void updateBranchID(String location,Integer eID){
-        final String insertSQL1="update db_example.staff set " +
+        final String insertSQL1="update staff.staff set " +
                 "location=? where eid=?";
         jdbcTemplate.update(insertSQL1,location,eID);
     }
     public void deleteStaff(Integer eID){
-        final String insertSQL2="delete from db_example.staff " +
+        final String insertSQL2="delete from staff.staff " +
                 "where eid=?";
         jdbcTemplate.update(insertSQL2,eID);
     }

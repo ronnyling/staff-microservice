@@ -23,7 +23,7 @@ public class SalesRecordService {
 
 
     public ResponseModel getSales(String staff){
-        String url ="http://localhost:8090/msb/getSales";
+        String url ="http://localhost:8090/sales/getSales";
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         ResponseModel res = new ResponseModel<>();
         res.setStatus(RESPONSE_CODE_1999);
