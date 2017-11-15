@@ -1,6 +1,6 @@
 spring:
   application:
-    name: eureka-client-test-ronny
+    name: eureka-staff-ronny
 server:
   port: 0
 eureka:
