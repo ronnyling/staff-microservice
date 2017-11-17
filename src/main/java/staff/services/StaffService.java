@@ -1,5 +1,7 @@
 package staff.services;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import staff.models.ResponseModel;
 import staff.repositories.StaffRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +19,19 @@ public class StaffService {
     RestTemplate restTemplate = new RestTemplate();
     @Autowired
     private StaffRepository staffRepository;
+
+    public ResponseModel fallbackMethod(String location){
+        ResponseModel res =new ResponseModel();
+        res.setStatus(9999);
+        res.setDataObj("You have reach a timeout on StaffService");
+        return res;
+    }
+
+    @HystrixCommand(fallbackMethod = "fallbackMethod", commandProperties = {
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "20000"),
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000"),
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "10")
+    })
     public ResponseModel getStaffs(String location){
         ResponseModel res = new ResponseModel<>();
         res.setStatus(RESPONSE_CODE_1999);

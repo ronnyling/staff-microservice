@@ -1,5 +1,9 @@
 package staff.controllers;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import staff.services.DeregisterService;
 import staff.models.ResponseModel;
 import staff.models.Staff;
@@ -53,6 +57,7 @@ public class MainController implements Interface {
 		return new ResponseEntity<>(staffService.getStaffs(location),httpHeaders, HttpStatus.OK);
 	}
 
+
 	@GetMapping(path="/getSalesRecord",produces = "application/json; charset=UTF-8")
 	public ResponseEntity<ResponseModel> retrieveSalesRecord(@RequestHeader String staff) {
 		return new ResponseEntity<>(salesRecordService.getSales(staff),httpHeaders, HttpStatus.OK);
@@ -74,4 +79,5 @@ public class MainController implements Interface {
 		ResponseModel res =deregisterService.deregister(currUser, staffDetails);
 		return new ResponseEntity<>(res, httpHeaders, HttpStatus.OK);
 	}
+
 }
