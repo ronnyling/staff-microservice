@@ -4,6 +4,11 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
+import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.annotation.StreamListener;
+import org.springframework.cloud.stream.messaging.Processor;
+import org.springframework.integration.annotation.InboundChannelAdapter;
+import org.springframework.integration.annotation.Poller;
 import staff.services.DeregisterService;
 import staff.models.ResponseModel;
 import staff.models.Staff;
@@ -20,12 +25,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
-
+@EnableBinding(Processor.class)
 @Controller    // This means that this class is a Controller
 @RequestMapping(path="/staff") // This means URL's start with /demo (after Application path)
 @Slf4j
 @EnableEurekaClient
-public class MainController implements Interface {
+public class 	MainController implements Interface {
 
 	private HttpHeaders httpHeaders;
 	@Autowired
@@ -60,6 +65,7 @@ public class MainController implements Interface {
 
 	@GetMapping(path="/getSalesRecord",produces = "application/json; charset=UTF-8")
 	public ResponseEntity<ResponseModel> retrieveSalesRecord(@RequestHeader String staff) {
+		sendToTopic();
 		return new ResponseEntity<>(salesRecordService.getSales(staff),httpHeaders, HttpStatus.OK);
 	}
 
@@ -80,4 +86,23 @@ public class MainController implements Interface {
 		return new ResponseEntity<>(res, httpHeaders, HttpStatus.OK);
 	}
 
+
+	@InboundChannelAdapter(channel= Processor.OUTPUT,poller = @Poller(fixedDelay = "20", maxMessagesPerPoll = "20"))
+	public Staff sendToTopic(){
+
+		Staff objectToPass=new Staff();
+		objectToPass.setFName("ronny");
+		return objectToPass;
+
+		//return "Sending this string to Topic";
+	}
+
+	@StreamListener(value =Processor.INPUT)
+	public void GetFromSales(final Staff message) {
+		if (message.getFName().equals("ronny")) {
+			log.info("This is working perfectly");
+			log.info(message.toString());
+
+		}else{log.info(message +" Wrong item retrieved");}
+	}
 }
